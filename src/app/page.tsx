@@ -1,101 +1,121 @@
-import Image from "next/image";
+'use client';
+
+import { sites } from '@/data/sites';
+import CategorySection from '@/components/CategorySection';
+import BingBackground from '@/components/BingBackground';
+import ProfileSection from '@/components/ProfileSection';
+import { useEffect, useState, useRef } from 'react';
+import SiteCard from '@/components/SiteCard';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isFixed, setIsFixed] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!contentRef.current) return;
+      
+      const scrollPosition = window.scrollY;
+      const contentTop = contentRef.current.offsetTop;
+      
+      // 只有当滚动超过内容区域顶部时才固定
+      setIsFixed(scrollPosition >= contentTop);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <div className="relative min-h-screen">
+      {/* Bing背景 */}
+      <BingBackground />
+
+      {/* 欢迎部分 */}
+      <section className="relative flex h-screen flex-col items-center justify-center">
+        <h1 className="mb-4 text-6xl font-bold text-white">Welcome!</h1>
+        <p className="text-xl text-white">欢迎来到我的站点</p>
+      </section>
+
+      {/* 内容区域 */}
+      <div ref={contentRef} className="relative mx-auto max-w-[1600px] px-8 pb-20">
+        <div className="flex flex-row">
+          {/* 左侧个人信息容器 */}
+          <div className="w-72 flex-none">
+            {/* 占位元素，保持布局 */}
+            <div className="w-full opacity-0">
+              <ProfileSection />
+            </div>
+            {/* 实际内容 */}
+            <div
+              className={`w-72 transition-[top] duration-300 ${
+                isFixed ? 'fixed left-8 top-8' : 'absolute left-0 top-0'
+              }`}
+            >
+              <ProfileSection />
+            </div>
+          </div>
+
+          {/* 右侧导航内容 */}
+          <main className="ml-8 flex-1">
+            {/* 头部区域 */}
+            <div className="mb-12 text-center">
+              <h2 className="text-4xl font-bold text-white">导航</h2>
+              <p className="mt-4 text-lg text-white/80">
+                猫猫的站点、项目、和正在做的事情
+              </p>
+            </div>
+
+            {/* 搜索框 */}
+            <div className="relative mb-12">
+              <input
+                type="text"
+                placeholder="搜索站点..."
+                className="w-full rounded-2xl border border-white/20 bg-white/10 px-6 py-4 text-lg text-white backdrop-blur-sm transition-all duration-300 placeholder:text-white/50 focus:border-white/30 focus:bg-white/20 focus:outline-none"
+              />
+            </div>
+
+            {/* 分类区域 */}
+            <div className="space-y-12">
+              {/* 公益站点 */}
+              <section>
+                <h2 className="mb-6 text-2xl font-bold text-white">🌟 公益站点</h2>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {sites
+                    .filter(site => site.category === 'public')
+                    .map(site => (
+                      <SiteCard key={site.id} site={site} />
+                    ))}
+                </div>
+              </section>
+
+              {/* 个人项目 */}
+              <section>
+                <h2 className="mb-6 text-2xl font-bold text-white">🚀 个人项目</h2>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {sites
+                    .filter(site => site.category === 'personal')
+                    .map(site => (
+                      <SiteCard key={site.id} site={site} />
+                    ))}
+                </div>
+              </section>
+
+              {/* 开发中 */}
+              <section>
+                <h2 className="mb-6 text-2xl font-bold text-white">🔧 最近在做</h2>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {sites
+                    .filter(site => site.category === 'dev')
+                    .map(site => (
+                      <SiteCard key={site.id} site={site} />
+                    ))}
+                </div>
+              </section>
+            </div>
+          </main>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
