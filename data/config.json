@@ -1,0 +1,53 @@
+{
+  "profile": {
+    "name": "猫猫",
+    "avatar": "/avatar.jpg",
+    "description": "一只猫猫",
+    "social": {
+      "github": "https://github.com/OraCatQAQ",
+      "qq": "",
+      "wechat": ""
+    }
+  },
+  "settings": {
+    "title": " 猫猫的个人导航",
+    "description": "个人导航",
+    "favicon": "/favicon.ico"
+  },
+  "welcome": {
+    "title": "Welcome!",
+    "description": "欢迎来到我的站点！！！"
+  },
+  "categories": [
+    {
+      "id": "public",
+      "name": "公益站点",
+      "icon": "🌟",
+      "description": "公益性质的站点"
+    },
+    {
+      "id": "personal",
+      "name": "个人项目",
+      "icon": "🚀",
+      "description": "个人开发的项目"
+    },
+    {
+      "id": "dev",
+      "name": "最近在做",
+      "icon": "🔧",
+      "description": "正在开发中的项目"
+    }
+  ],
+  "sites": [
+    {
+      "id": "1",
+      "title": "示例站点",
+      "description": "这是一个示例站点",
+      "url": "https://example.com",
+      "icon": "🌟",
+      "preview": "",
+      "category": "public",
+      "tags": ["示例", "演示"]
+    }
+  ]
+}

@@ -1,29 +1,81 @@
 'use client';
 
-import { sites } from '@/data/sites';
 import BingBackground from '@/components/BingBackground';
 import ProfileSection from '@/components/ProfileSection';
 import { useEffect, useState, useRef } from 'react';
 import SiteCard from '@/components/SiteCard';
 
+interface Site {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  icon: string;
+  preview: string;
+  category: 'public' | 'personal' | 'dev';
+  tags: string[];
+}
+
+interface Config {
+  profile: {
+    name: string;
+    description: string;
+    avatar: string;
+    social: {
+      github: string;
+      qq: string;
+      wechat: string;
+    };
+  };
+  settings: {
+    title: string;
+    description: string;
+    favicon: string;
+  };
+  welcome: {
+    title: string;
+    description: string;
+  };
+  sites: Site[];
+  categories: {
+    id: string;
+    name: string;
+    icon: string;
+  }[];
+}
+
 export default function Home() {
   const [isFixed, setIsFixed] = useState(false);
+  const [config, setConfig] = useState<Config | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // 加载配置
+    fetch('/api/config')
+      .then(res => res.json())
+      .then(data => {
+        setConfig(data);
+      })
+      .catch(error => {
+        console.error('Failed to load config:', error);
+      });
+
     const handleScroll = () => {
       if (!contentRef.current) return;
       
       const scrollPosition = window.scrollY;
       const contentTop = contentRef.current.offsetTop;
       
-      // 只有当滚动超过内容区域顶部时才固定
       setIsFixed(scrollPosition >= contentTop);
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  if (!config) {
+    return null;
+  }
 
   return (
     <div className="relative min-h-screen">
@@ -32,8 +84,8 @@ export default function Home() {
 
       {/* 欢迎部分 */}
       <section className="relative flex h-screen flex-col items-center justify-center">
-        <h1 className="mb-4 text-6xl font-bold text-white">Welcome!</h1>
-        <p className="text-xl text-white">欢迎来到我的站点</p>
+        <h1 className="mb-4 text-6xl font-bold text-white">{config.welcome.title}</h1>
+        <p className="text-xl text-white">{config.welcome.description}</p>
       </section>
 
       {/* 内容区域 */}
@@ -61,7 +113,7 @@ export default function Home() {
             <div className="mb-12 text-center">
               <h2 className="text-4xl font-bold text-white">导航</h2>
               <p className="mt-4 text-lg text-white/80">
-                猫猫的站点、项目、和正在做的事情
+                {config.profile.description}
               </p>
             </div>
 
@@ -76,41 +128,20 @@ export default function Home() {
 
             {/* 分类区域 */}
             <div className="space-y-12">
-              {/* 公益站点 */}
-              <section>
-                <h2 className="mb-6 text-2xl font-bold text-white">🌟 公益站点</h2>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {sites
-                    .filter(site => site.category === 'public')
-                    .map(site => (
-                      <SiteCard key={site.id} site={site} />
-                    ))}
-                </div>
-              </section>
-
-              {/* 个人项目 */}
-              <section>
-                <h2 className="mb-6 text-2xl font-bold text-white">🚀 个人项目</h2>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {sites
-                    .filter(site => site.category === 'personal')
-                    .map(site => (
-                      <SiteCard key={site.id} site={site} />
-                    ))}
-                </div>
-              </section>
-
-              {/* 开发中 */}
-              <section>
-                <h2 className="mb-6 text-2xl font-bold text-white">🔧 最近在做</h2>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {sites
-                    .filter(site => site.category === 'dev')
-                    .map(site => (
-                      <SiteCard key={site.id} site={site} />
-                    ))}
-                </div>
-              </section>
+              {config.categories.map(category => (
+                <section key={category.id}>
+                  <h2 className="mb-6 text-2xl font-bold text-white">
+                    {category.icon} {category.name}
+                  </h2>
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {config.sites
+                      .filter(site => site.category === category.id)
+                      .map(site => (
+                        <SiteCard key={site.id} site={site} />
+                      ))}
+                  </div>
+                </section>
+              ))}
             </div>
           </main>
         </div>
