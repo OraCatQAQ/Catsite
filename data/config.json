@@ -13,7 +13,7 @@
     "title": " 猫猫的个人导航",
     "description": "个人导航",
     "favicon": "/favicon.ico",
-    "adminPassword": "123456"
+    "adminPassword": "qwer20020531"
   },
   "welcome": {
     "title": "Welcome!",
@@ -48,7 +48,10 @@
       "icon": "🌟",
       "preview": "",
       "category": "public",
-      "tags": ["示例", "演示"]
+      "tags": [
+        "示例",
+        "演示"
+      ]
     }
   ]
 }

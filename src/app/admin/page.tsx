@@ -477,14 +477,22 @@ export default function AdminPage() {
         body: JSON.stringify(formData),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to save config');
+        throw new Error(result.details || result.error || '保存失败');
       }
 
       alert('保存成功！');
+      
+      // 如果修改了密码，提示用户重新登录
+      if (formData.settings.adminPassword !== password) {
+        alert('密码已修改，请重新登录');
+        setIsLoggedIn(false);
+      }
     } catch (error) {
       console.error('Save failed:', error);
-      alert('保存失败，请重试');
+      alert(error instanceof Error ? error.message : '保存失败，请重试');
     }
   };
 
