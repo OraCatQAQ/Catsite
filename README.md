@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CatSite - 个人导航站点
 
-## Getting Started
+一个美观的个人导航网站，带有后台管理系统。使用 Next.js 14 + Tailwind CSS 构建，支持响应式设计。
 
-First, run the development server:
+## 特性
+
+- 🎨 现代化的UI设计
+- 🌈 每日必应壁纸作为背景
+- 📱 完全响应式设计
+- ⚡️ 快速的页面加载和导航
+- 🛠️ 完整的后台管理系统
+- 🔐 安全的密码保护
+- 🎯 分类管理和站点管理
+- 📝 可自定义的个人信息
+
+## 部署说明
+
+### 方法一：一键部署（推荐）
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker run -d \
+  --name catsite \
+  -p 3000:3000 \
+  -v $(pwd)/data:/app/data \
+  570768706/catsite:latest
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 方法二：手动构建
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. 克隆仓库并构建
+```bash
+git clone https://github.com/OraCatQAQ/CatSite.git
+cd CatSite
+docker build -t catsite .
+docker run -d \
+  --name catsite \
+  -p 3000:3000 \
+  -v $(pwd)/data:/app/data \
+  catsite
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 使用 docker-compose
 
-## Learn More
+创建 `docker-compose.yml` 文件：
+```yaml
+version: '3'
+services:
+  catsite:
+    image: 570768706/catsite:latest
+    container_name: catsite
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+```
 
-To learn more about Next.js, take a look at the following resources:
+运行：
+```bash
+docker-compose up -d
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 配置说明
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+所有配置都存储在 `data/config.json` 文件中，包括：
 
-## Deploy on Vercel
+- 个人信息（头像、名称、描述、社交链接）
+- 站点设置（标题、描述、图标）
+- 欢迎语设置
+- 分类和导航站点数据
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+访问地址：`http://localhost:3000`
+后台管理：`http://localhost:3000/admin`
+默认密码：`123456`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 技术栈
+
+- Next.js 14
+- React
+- TypeScript
+- Tailwind CSS
+- Docker
+
