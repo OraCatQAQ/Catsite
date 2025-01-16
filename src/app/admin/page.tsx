@@ -18,6 +18,7 @@ interface Config {
     title: string;
     description: string;
     favicon: string;
+    adminPassword: string;
   };
   welcome: {
     title: string;
@@ -48,6 +49,7 @@ interface Site {
 export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   // 表单状态
@@ -65,7 +67,8 @@ export default function AdminPage() {
     settings: {
       title: '',
       description: '',
-      favicon: ''
+      favicon: '',
+      adminPassword: ''
     },
     welcome: {
       title: '',
@@ -412,21 +415,23 @@ export default function AdminPage() {
 
   // 加载配置
   useEffect(() => {
-    if (isLoggedIn) {
-      fetch('/api/config')
-        .then(res => res.json())
-        .then(data => {
-          setFormData(data);
-        })
-        .catch(error => {
-          console.error('Failed to load config:', error);
-        });
-    }
-  }, [isLoggedIn]);
+    fetch('/api/config')
+      .then(res => res.json())
+      .then(data => {
+        setFormData(data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Failed to load config:', error);
+        setIsLoading(false);
+      });
+  }, []);
 
   const handleLogin = () => {
-    if (password === '123456') {
+    if (password === formData.settings.adminPassword) {
       setIsLoggedIn(true);
+    } else {
+      alert('密码错误');
     }
   };
 
@@ -495,12 +500,14 @@ export default function AdminPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="请输入管理密码"
               className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white placeholder:text-white/50 focus:border-white/30 focus:outline-none"
+              disabled={isLoading}
             />
             <button
               onClick={handleLogin}
-              className="w-full rounded-lg bg-white/20 px-4 py-2 text-white hover:bg-white/30"
+              className="w-full rounded-lg bg-white/20 px-4 py-2 text-white hover:bg-white/30 disabled:opacity-50"
+              disabled={isLoading}
             >
-              登录
+              {isLoading ? '加载中...' : '登录'}
             </button>
           </div>
         </div>
@@ -813,6 +820,24 @@ export default function AdminPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 密码设置 */}
+        <section className="rounded-lg bg-white/10 p-6 backdrop-blur-sm">
+          <h2 className="mb-4 text-xl font-bold text-white">密码设置</h2>
+          <div className="space-y-4">
+            <div>
+              <label className="mb-2 block text-sm text-white/80">管理密码</label>
+              <input
+                type="password"
+                value={formData.settings.adminPassword}
+                onChange={(e) => handleInputChange('settings', 'adminPassword', e.target.value)}
+                className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white placeholder:text-white/50 focus:border-white/30 focus:outline-none"
+                placeholder="输入新的管理密码"
+              />
+              <p className="mt-2 text-sm text-white/50">修改后需要使用新密码重新登录</p>
             </div>
           </div>
         </section>

@@ -12,7 +12,8 @@
   "settings": {
     "title": " 猫猫的个人导航",
     "description": "个人导航",
-    "favicon": "/favicon.ico"
+    "favicon": "/favicon.ico",
+    "adminPassword": "123456"
   },
   "welcome": {
     "title": "Welcome!",
