@@ -36,44 +36,44 @@ export const sites: Site[] = [
   // 个人项目
   {
     id: 'personal-1',
-    title: '个人博客',
-    description: '分享技术文章和个人经验',
-    url: 'https://example.com/blog',
+    title: 'cmd_write',
+    description: '一个摸鱼小工具',
+    url: 'https://github.com/OraCatQAQ/cmd_writer',
     category: 'personal',
     icon: '✍️',
-    tags: ['博客', '技术'],
+    tags: ['github', '摸鱼'],
     // preview: '/previews/blog-site.png'
   },
   {
     id: 'personal-2',
-    title: '项目展示',
-    description: '展示个人开发的项目作品',
-    url: 'https://example.com/projects',
+    title: 'CatSite',
+    description: '该站点源码，一个个人站点导航站',
+    url: 'https://github.com/OraCatQAQ/CatSite',
     category: 'personal',
     icon: '🎨',
-    tags: ['项目', '作品集'],
+    tags: ['github', '导航站'],
     // preview: '/previews/projects-site.png'
   },
 
-  // 开发中项目
+  // 最近在做
   {
     id: 'dev-1',
-    title: '工具集合',
-    description: '正在开发的在线工具集合',
-    url: 'https://example.com/tools',
+    title: 'Useful_AI',
+    description: '准备搭建一个以实用为导向的知识库，欢迎贡献',
+    url: 'https://k6hl7te86b.feishu.cn/wiki/space/7444116130671247364?ccm_open_type=lark_wiki_spaceLink&open_tab_from=wiki_home',
     category: 'dev',
     icon: '🛠️',
-    tags: ['开发中', '工具'],
+    tags: ['飞书', '知识库'],
     // preview: '/previews/tools-site.png'
   },
   {
     id: 'dev-2',
-    title: 'AI 助手',
-    description: '智能对话和辅助工具',
-    url: 'https://example.com/ai',
+    title: '心耀APP',
+    description: '一个心理+宠物的APP，还在开发阶段',
+    url: 'https://github.com/OraCatQAQ/xinyao_MVP',
     category: 'dev',
     icon: '🤖',
-    tags: ['开发中', 'AI'],
+    tags: ['github', '心耀'],
     // preview: '/previews/ai-site.png'
   },
 ]; 

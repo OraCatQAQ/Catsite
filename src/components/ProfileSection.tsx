@@ -48,6 +48,7 @@ export default function ProfileSection() {
         <h3 className="mb-4 text-xl font-bold text-white">关于我</h3>
         <p className="text-white/80">
           orzcat，一只只会睡大觉的猫猫OWO~
+          所以这里的这些都是AI做的QAQ，不会不知道不懂~
         </p>
       </div>
     </div>
