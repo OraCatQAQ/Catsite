@@ -1,7 +1,6 @@
 'use client';
 
 import { sites } from '@/data/sites';
-import CategorySection from '@/components/CategorySection';
 import BingBackground from '@/components/BingBackground';
 import ProfileSection from '@/components/ProfileSection';
 import { useEffect, useState, useRef } from 'react';
