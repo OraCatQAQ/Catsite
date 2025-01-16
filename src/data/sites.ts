@@ -28,7 +28,7 @@ export const sites: Site[] = [
     description: '碎片化ai笔记站点，暂时没开放注册',
     url: 'https://note.orzcat.xyz',
     category: 'public',
-    icon: '🎓',
+    icon: '🧿',
     tags: ['note', 'blinko'],
     preview: '/previews/note-site.png'
   },
@@ -42,7 +42,7 @@ export const sites: Site[] = [
     category: 'personal',
     icon: '✍️',
     tags: ['博客', '技术'],
-    preview: '/previews/blog-site.png'
+    // preview: '/previews/blog-site.png'
   },
   {
     id: 'personal-2',
@@ -52,7 +52,7 @@ export const sites: Site[] = [
     category: 'personal',
     icon: '🎨',
     tags: ['项目', '作品集'],
-    preview: '/previews/projects-site.png'
+    // preview: '/previews/projects-site.png'
   },
 
   // 开发中项目
@@ -64,7 +64,7 @@ export const sites: Site[] = [
     category: 'dev',
     icon: '🛠️',
     tags: ['开发中', '工具'],
-    preview: '/previews/tools-site.png'
+    // preview: '/previews/tools-site.png'
   },
   {
     id: 'dev-2',
@@ -74,6 +74,6 @@ export const sites: Site[] = [
     category: 'dev',
     icon: '🤖',
     tags: ['开发中', 'AI'],
-    preview: '/previews/ai-site.png'
+    // preview: '/previews/ai-site.png'
   },
 ]; 

@@ -21,7 +21,7 @@ export default function ProfileSection() {
         <h2 className="mb-4 text-center text-2xl font-bold text-white">orzCat</h2>
         <div className="flex justify-center gap-4">
           <a
-            href="https://github.com/yourusername"
+            href="https://github.com/OraCatQAQ"
             target="_blank"
             rel="noopener noreferrer"
             className="text-2xl text-white/80 transition-colors hover:text-white"
