@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface Config {
@@ -184,123 +184,132 @@ export default function AdminPage() {
   };
 
   // 站点表单
-  const SiteForm = ({ site, onSubmit, onCancel }: { site: Site; onSubmit: () => void; onCancel: () => void }) => (
-    <div className="space-y-4">
-      <div>
-        <label className="mb-2 block text-sm text-white/80">标题</label>
-        <input
-          type="text"
-          value={site.title}
-          onChange={(e) => setNewSite({ ...site, title: e.target.value })}
-          className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
-          placeholder="站点标题"
-        />
-      </div>
-      <div>
-        <label className="mb-2 block text-sm text-white/80">描述</label>
-        <textarea
-          value={site.description}
-          onChange={(e) => setNewSite({ ...site, description: e.target.value })}
-          className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
-          placeholder="站点描述"
-          rows={3}
-        />
-      </div>
-      <div>
-        <label className="mb-2 block text-sm text-white/80">URL</label>
-        <input
-          type="url"
-          value={site.url}
-          onChange={(e) => setNewSite({ ...site, url: e.target.value })}
-          className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
-          placeholder="https://example.com"
-        />
-      </div>
-      <div>
-        <label className="mb-2 block text-sm text-white/80">图标</label>
-        <input
-          type="text"
-          value={site.icon}
-          onChange={(e) => setNewSite({ ...site, icon: e.target.value })}
-          className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
-          placeholder="输入emoji作为图标"
-        />
-      </div>
-      <div>
-        <label className="mb-2 block text-sm text-white/80">预览图</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => e.target.files?.[0] && handleFileChange('preview', e.target.files[0])}
-          className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
-        />
-      </div>
-      <div>
-        <label className="mb-2 block text-sm text-white/80">分类</label>
-        <select
-          value={site.category}
-          onChange={(e) => setNewSite({ ...site, category: e.target.value })}
-          className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
-        >
-          <option value="">选择分类</option>
-          {formData.categories.map(category => (
-            <option key={category.id} value={category.id}>
-              {category.icon} {category.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label className="mb-2 block text-sm text-white/80">标签</label>
-        <div className="flex flex-wrap gap-2 mb-2">
-          {site.tags.map(tag => (
-            <span
-              key={tag}
-              className="rounded-full bg-white/10 px-3 py-1 text-sm text-white flex items-center gap-2"
-            >
-              {tag}
-              <button
-                onClick={() => handleRemoveTag(site, tag)}
-                className="text-white/50 hover:text-white"
-              >
-                ×
-              </button>
-            </span>
-          ))}
-        </div>
-        <div className="flex gap-2">
+  const SiteForm = useCallback(({ site, onSubmit, onCancel }: { site: Site; onSubmit: () => void; onCancel: () => void }) => {
+    const [formState, setFormState] = useState(site);
+
+    const handleChange = (field: keyof Site, value: any) => {
+      setFormState(prev => ({ ...prev, [field]: value }));
+      setNewSite(prev => ({ ...prev, [field]: value }));
+    };
+
+    return (
+      <div className="space-y-4">
+        <div>
+          <label className="mb-2 block text-sm text-white/80">标题</label>
           <input
             type="text"
-            value={newTag}
-            onChange={(e) => setNewTag(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleAddTag(site, newTag)}
-            className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
-            placeholder="输入标签"
+            value={formState.title}
+            onChange={(e) => handleChange('title', e.target.value)}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
+            placeholder="站点标题"
           />
+        </div>
+        <div>
+          <label className="mb-2 block text-sm text-white/80">描述</label>
+          <textarea
+            value={formState.description}
+            onChange={(e) => handleChange('description', e.target.value)}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
+            placeholder="站点描述"
+            rows={3}
+          />
+        </div>
+        <div>
+          <label className="mb-2 block text-sm text-white/80">URL</label>
+          <input
+            type="url"
+            value={formState.url}
+            onChange={(e) => handleChange('url', e.target.value)}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
+            placeholder="https://example.com"
+          />
+        </div>
+        <div>
+          <label className="mb-2 block text-sm text-white/80">图标</label>
+          <input
+            type="text"
+            value={formState.icon}
+            onChange={(e) => handleChange('icon', e.target.value)}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
+            placeholder="输入emoji作为图标"
+          />
+        </div>
+        <div>
+          <label className="mb-2 block text-sm text-white/80">预览图</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => e.target.files?.[0] && handleFileChange('preview', e.target.files[0])}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
+          />
+        </div>
+        <div>
+          <label className="mb-2 block text-sm text-white/80">分类</label>
+          <select
+            value={formState.category}
+            onChange={(e) => handleChange('category', e.target.value)}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
+          >
+            <option value="">选择分类</option>
+            {formData.categories.map(category => (
+              <option key={category.id} value={category.id}>
+                {category.icon} {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="mb-2 block text-sm text-white/80">标签</label>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {formState.tags.map(tag => (
+              <span
+                key={tag}
+                className="rounded-full bg-white/10 px-3 py-1 text-sm text-white flex items-center gap-2"
+              >
+                {tag}
+                <button
+                  onClick={() => handleRemoveTag(formState, tag)}
+                  className="text-white/50 hover:text-white"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleAddTag(formState, newTag)}
+              className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
+              placeholder="输入标签"
+            />
+            <button
+              onClick={() => handleAddTag(formState, newTag)}
+              className="rounded-lg bg-white/20 px-4 py-2 text-white hover:bg-white/30"
+            >
+              添加
+            </button>
+          </div>
+        </div>
+        <div className="flex justify-end gap-4">
           <button
-            onClick={() => handleAddTag(site, newTag)}
+            onClick={onCancel}
             className="rounded-lg bg-white/20 px-4 py-2 text-white hover:bg-white/30"
           >
-            添加
+            取消
+          </button>
+          <button
+            onClick={onSubmit}
+            className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          >
+            {editingSite ? '更新' : '添加'}
           </button>
         </div>
       </div>
-      <div className="flex justify-end gap-4">
-        <button
-          onClick={onCancel}
-          className="rounded-lg bg-white/20 px-4 py-2 text-white hover:bg-white/30"
-        >
-          取消
-        </button>
-        <button
-          onClick={onSubmit}
-          className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-        >
-          {editingSite ? '更新' : '添加'}
-        </button>
-      </div>
-    </div>
-  );
+    );
+  }, [formData.categories, editingSite, newTag]);
 
   // 添加新分类
   const handleAddCategory = () => {
@@ -353,65 +362,74 @@ export default function AdminPage() {
   };
 
   // 分类表单
-  const CategoryForm = ({ category, onSubmit, onCancel }: { category: Category; onSubmit: () => void; onCancel: () => void }) => (
-    <div className="space-y-4">
-      <div>
-        <label className="mb-2 block text-sm text-white/80">分类ID</label>
-        <input
-          type="text"
-          value={category.id}
-          onChange={(e) => setNewCategory({ ...category, id: e.target.value })}
-          className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
-          placeholder="分类ID（英文字母）"
-          disabled={!!editingCategory}
-        />
+  const CategoryForm = useCallback(({ category, onSubmit, onCancel }: { category: Category; onSubmit: () => void; onCancel: () => void }) => {
+    const [formState, setFormState] = useState(category);
+
+    const handleChange = (field: keyof Category, value: string) => {
+      setFormState(prev => ({ ...prev, [field]: value }));
+      setNewCategory(prev => ({ ...prev, [field]: value }));
+    };
+
+    return (
+      <div className="space-y-4">
+        <div>
+          <label className="mb-2 block text-sm text-white/80">分类ID</label>
+          <input
+            type="text"
+            value={formState.id}
+            onChange={(e) => handleChange('id', e.target.value)}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
+            placeholder="分类ID（英文字母）"
+            disabled={!!editingCategory}
+          />
+        </div>
+        <div>
+          <label className="mb-2 block text-sm text-white/80">分类名称</label>
+          <input
+            type="text"
+            value={formState.name}
+            onChange={(e) => handleChange('name', e.target.value)}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
+            placeholder="分类名称"
+          />
+        </div>
+        <div>
+          <label className="mb-2 block text-sm text-white/80">图标</label>
+          <input
+            type="text"
+            value={formState.icon}
+            onChange={(e) => handleChange('icon', e.target.value)}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
+            placeholder="输入emoji作为图标"
+          />
+        </div>
+        <div>
+          <label className="mb-2 block text-sm text-white/80">描述</label>
+          <textarea
+            value={formState.description}
+            onChange={(e) => handleChange('description', e.target.value)}
+            className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
+            placeholder="分类描述"
+            rows={3}
+          />
+        </div>
+        <div className="flex justify-end gap-4">
+          <button
+            onClick={onCancel}
+            className="rounded-lg bg-white/20 px-4 py-2 text-white hover:bg-white/30"
+          >
+            取消
+          </button>
+          <button
+            onClick={onSubmit}
+            className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          >
+            {editingCategory ? '更新' : '添加'}
+          </button>
+        </div>
       </div>
-      <div>
-        <label className="mb-2 block text-sm text-white/80">分类名称</label>
-        <input
-          type="text"
-          value={category.name}
-          onChange={(e) => setNewCategory({ ...category, name: e.target.value })}
-          className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
-          placeholder="分类名称"
-        />
-      </div>
-      <div>
-        <label className="mb-2 block text-sm text-white/80">图标</label>
-        <input
-          type="text"
-          value={category.icon}
-          onChange={(e) => setNewCategory({ ...category, icon: e.target.value })}
-          className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
-          placeholder="输入emoji作为图标"
-        />
-      </div>
-      <div>
-        <label className="mb-2 block text-sm text-white/80">描述</label>
-        <textarea
-          value={category.description}
-          onChange={(e) => setNewCategory({ ...category, description: e.target.value })}
-          className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white"
-          placeholder="分类描述"
-          rows={3}
-        />
-      </div>
-      <div className="flex justify-end gap-4">
-        <button
-          onClick={onCancel}
-          className="rounded-lg bg-white/20 px-4 py-2 text-white hover:bg-white/30"
-        >
-          取消
-        </button>
-        <button
-          onClick={onSubmit}
-          className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-        >
-          {editingCategory ? '更新' : '添加'}
-        </button>
-      </div>
-    </div>
-  );
+    );
+  }, [editingCategory]);
 
   // 加载配置
   useEffect(() => {
