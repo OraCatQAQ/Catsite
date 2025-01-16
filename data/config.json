@@ -4,7 +4,7 @@
     "avatar": "/avatar.jpg",
     "description": "一只猫猫",
     "social": {
-      "github": "https://github.com/OraCatQAQ",
+      "github": "https://github.com",
       "qq": "",
       "wechat": ""
     }
@@ -13,7 +13,7 @@
     "title": " 猫猫的个人导航",
     "description": "个人导航",
     "favicon": "/favicon.ico",
-    "adminPassword": "qwer20020531"
+    "adminPassword": "123456"
   },
   "welcome": {
     "title": "Welcome!",
@@ -31,12 +31,6 @@
       "name": "个人项目",
       "icon": "🚀",
       "description": "个人开发的项目"
-    },
-    {
-      "id": "dev",
-      "name": "最近在做",
-      "icon": "🔧",
-      "description": "正在开发中的项目"
     }
   ],
   "sites": [

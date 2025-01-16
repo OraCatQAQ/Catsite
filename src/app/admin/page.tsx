@@ -524,10 +524,42 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-8">
-      <div className="mx-auto max-w-6xl space-y-8">
-        <h1 className="text-3xl font-bold text-white">后台管理</h1>
-        
+    <div className="min-h-screen bg-gray-900">
+      {/* 顶栏 */}
+      <div className="sticky top-0 z-50 border-b border-white/10 bg-gray-900/50 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-8">
+          <h1 className="text-2xl font-bold text-white">后台管理</h1>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => {
+                const newPassword = prompt('请输入新密码：');
+                if (newPassword) {
+                  setFormData(prev => ({
+                    ...prev,
+                    settings: {
+                      ...prev.settings,
+                      adminPassword: newPassword
+                    }
+                  }));
+                  alert('密码已修改，保存后生效');
+                }
+              }}
+              className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20"
+            >
+              修改密码
+            </button>
+            <button
+              onClick={handleSave}
+              className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+            >
+              保存更改
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 主要内容 */}
+      <div className="mx-auto max-w-6xl space-y-8 p-8">
         {/* 个人信息设置 */}
         <section className="rounded-lg bg-white/10 p-6 backdrop-blur-sm">
           <h2 className="mb-4 text-xl font-bold text-white">个人信息设置</h2>
@@ -831,34 +863,6 @@ export default function AdminPage() {
             </div>
           </div>
         </section>
-
-        {/* 密码设置 */}
-        <section className="rounded-lg bg-white/10 p-6 backdrop-blur-sm">
-          <h2 className="mb-4 text-xl font-bold text-white">密码设置</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="mb-2 block text-sm text-white/80">管理密码</label>
-              <input
-                type="password"
-                value={formData.settings.adminPassword}
-                onChange={(e) => handleInputChange('settings', 'adminPassword', e.target.value)}
-                className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-white placeholder:text-white/50 focus:border-white/30 focus:outline-none"
-                placeholder="输入新的管理密码"
-              />
-              <p className="mt-2 text-sm text-white/50">修改后需要使用新密码重新登录</p>
-            </div>
-          </div>
-        </section>
-
-        {/* 保存按钮 */}
-        <div className="flex justify-end">
-          <button
-            onClick={handleSave}
-            className="rounded-lg bg-blue-500 px-6 py-2 text-white hover:bg-blue-600"
-          >
-            保存更改
-          </button>
-        </div>
       </div>
     </div>
   );
