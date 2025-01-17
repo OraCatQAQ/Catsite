@@ -14,8 +14,8 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // 确保上传目录存在，并设置权限
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+    // 修改上传目录到 data/uploads
+    const uploadDir = path.join(process.cwd(), 'data', 'uploads');
     try {
       await fs.access(uploadDir);
     } catch {

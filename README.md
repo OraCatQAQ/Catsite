@@ -23,34 +23,20 @@ mkdir ~/catsite
 cd ~/catsite
 
 # 创建数据目录并设置权限
-mkdir -p data public/uploads
-chmod -R 777 data public/uploads
+mkdir -p data/uploads
+chmod -R 777 data
 
 # 启动容器（首次启动会使用默认配置）
 docker run -d \
   --name catsite \
   -p 3000:3000 \
   -v $(pwd)/data:/app/data \
-  -v $(pwd)/public/uploads:/app/public/uploads \
   570768706/catsite:latest
 ```
 
 访问地址：
 - 主站：http://localhost:3000
 - 后台管理：http://localhost:3000/admin （默认密码：123456）
-
-### 方法二：手动构建
-
-1. 克隆仓库
-```bash
-git clone https://github.com/OraCatQAQ/catsite.git
-cd catsite
-```
-
-2. 使用 Docker Compose 部署
-```bash
-docker-compose up -d
-```
 
 ## 配置说明
 

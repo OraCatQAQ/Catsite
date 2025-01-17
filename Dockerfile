@@ -22,10 +22,8 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-# 创建必要的目录并设置权限
-RUN mkdir -p /app/data /app/public/uploads && \
-    chown -R node:node /app && \
-    chmod 755 /app/data /app/public/uploads
+# 创建必要的目录
+RUN mkdir -p /app/data /app/public/uploads
 
 # 复制构建产物和配置文件
 COPY --from=builder /app/public ./public
@@ -33,12 +31,10 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/data/config.json ./data/
 
-# 设置用户
-USER node
-
 EXPOSE 3000
 
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-CMD ["node", "server.js"] 
+# 在启动时设置权限
+CMD chmod -R 777 /app/public/uploads && chmod -R 777 /app/data && node server.js 
