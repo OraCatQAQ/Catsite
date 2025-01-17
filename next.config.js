@@ -12,6 +12,23 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    // 启用 app directory
+    appDir: true,
+  },
+  // 添加跨域配置
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET,POST,PUT,DELETE,OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: 'Content-Type' },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig; 
