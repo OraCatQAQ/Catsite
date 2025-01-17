@@ -17,7 +17,13 @@
 
 ### 方法一：一键部署（推荐）
 
+1. 首次部署：
 ```bash
+# 创建数据目录
+mkdir data
+# 下载示例配置文件
+curl -o data/config.json https://raw.githubusercontent.com/OraCatQAQ/catsite/main/data/config.json
+# 启动容器
 docker run -d \
   --name catsite \
   -p 3000:3000 \
@@ -25,38 +31,43 @@ docker run -d \
   570768706/catsite:latest
 ```
 
-### 方法二：手动构建
-
-1. 克隆仓库并构建
+2. 更新应用：
 ```bash
-git clone https://github.com/OraCatQAQ/CatSite.git
-cd CatSite
-docker build -t catsite .
+# 拉取最新镜像
+docker pull 570768706/catsite:latest
+# 停止并删除旧容器（配置文件会保留）
+docker stop catsite
+docker rm catsite
+# 使用相同的配置启动新容器
 docker run -d \
   --name catsite \
   -p 3000:3000 \
   -v $(pwd)/data:/app/data \
-  catsite
+  570768706/catsite:latest
 ```
 
-### 使用 docker-compose
+### 方法二：使用 docker-compose
 
-创建 `docker-compose.yml` 文件：
-```yaml
-version: '3'
-services:
-  catsite:
-    image: 570768706/catsite:latest
-    container_name: catsite
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./data:/app/data
-    restart: unless-stopped
-```
-
-运行：
+1. 下载 docker-compose.yml：
 ```bash
+curl -o docker-compose.yml https://raw.githubusercontent.com/OraCatQAQ/catsite/main/docker-compose.yml
+```
+
+2. 创建数据目录并下载配置文件：
+```bash
+mkdir data
+curl -o data/config.json https://raw.githubusercontent.com/OraCatQAQ/catsite/main/data/config.json
+```
+
+3. 启动服务：
+```bash
+docker-compose up -d
+```
+
+4. 更新应用：
+```bash
+docker-compose pull
+docker-compose down
 docker-compose up -d
 ```
 
@@ -76,8 +87,7 @@ docker-compose up -d
 ## 技术栈
 
 - Next.js 14
-- React
-- TypeScript
 - Tailwind CSS
+- TypeScript
 - Docker
 
