@@ -480,8 +480,57 @@ export default function AdminPage() {
 
   // 处理文件上传
   const handleFileChange = async (field: string, file: File) => {
-    // 这里应该实现文件上传逻辑
-    console.log(`Uploading ${field}:`, file);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || '上传失败');
+      }
+
+      // 根据不同的字段更新不同的状态
+      if (field === 'preview') {
+        // 如果是在编辑现有站点
+        if (editingSite) {
+          const updatedSite = { ...newSite, preview: result.url };
+          setNewSite(updatedSite);
+          handleUpdateSite(updatedSite);
+        } else {
+          // 如果是在添加新站点
+          setNewSite(prev => ({ ...prev, preview: result.url }));
+        }
+      } else if (field === 'avatar') {
+        setFormData(prev => ({
+          ...prev,
+          profile: { ...prev.profile, avatar: result.url }
+        }));
+      } else if (field === 'favicon') {
+        setFormData(prev => ({
+          ...prev,
+          settings: { ...prev.settings, favicon: result.url }
+        }));
+      } else if (field === 'wechat') {
+        setFormData(prev => ({
+          ...prev,
+          profile: {
+            ...prev.profile,
+            social: { ...prev.profile.social, wechat: result.url }
+          }
+        }));
+      }
+
+      alert('上传成功！');
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert(error instanceof Error ? error.message : '上传失败，请重试');
+    }
   };
 
   // 保存更改

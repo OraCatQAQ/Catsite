@@ -24,6 +24,14 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: '/uploads/:path*',
+        destination: '/public/uploads/:path*',
+      },
+    ];
+  },
 }
 
 module.exports = nextConfig 
