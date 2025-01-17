@@ -14,12 +14,12 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // 确保上传目录存在
+    // 确保上传目录存在，并设置权限
     const uploadDir = path.join(process.cwd(), 'public', 'uploads');
     try {
       await fs.access(uploadDir);
     } catch {
-      await fs.mkdir(uploadDir, { recursive: true });
+      await fs.mkdir(uploadDir, { recursive: true, mode: 0o777 });
     }
 
     // 生成文件名
@@ -27,8 +27,8 @@ export async function POST(request: Request) {
     const filename = `${Date.now()}${ext}`;
     const filepath = path.join(uploadDir, filename);
 
-    // 写入文件
-    await fs.writeFile(filepath, buffer);
+    // 写入文件并设置权限
+    await fs.writeFile(filepath, buffer, { mode: 0o666 });
 
     // 返回可访问的URL路径
     return NextResponse.json({ 
