@@ -2,10 +2,12 @@ version: '3'
 
 services:
   web:
-    image: 570768706/catsite:latest
+    image: oracatqaq/catsite:latest
     container_name: catsite
     ports:
       - "3000:3000"
+    volumes:
+      - ./data:/app/data
     restart: always
     environment:
       NODE_ENV: production 

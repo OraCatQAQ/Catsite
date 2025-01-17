@@ -16,9 +16,16 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# 创建 data 目录并设置权限
+RUN mkdir -p /app/data && chown nextjs:nodejs /app/data && chmod 755 /app/data
+
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+
+# 复制初始配置文件（如果存在）
+COPY --from=builder /app/data/config.json ./data/config.json
+RUN chown nextjs:nodejs /app/data/config.json && chmod 644 /app/data/config.json
 
 USER nextjs
 
