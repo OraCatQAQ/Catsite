@@ -76,13 +76,28 @@ export async function POST(request: Request) {
     
     // 确保目录存在
     const dir = path.dirname(CONFIG_PATH);
-    await fs.mkdir(dir, { recursive: true });
+    try {
+      await fs.access(dir);
+    } catch {
+      await fs.mkdir(dir, { recursive: true, mode: 0o777 });
+    }
     
-    // 保存配置文件
-    await fs.writeFile(CONFIG_PATH, JSON.stringify(data, null, 2), 'utf-8');
+    // 尝试写入配置文件
+    try {
+      await fs.writeFile(CONFIG_PATH, JSON.stringify(data, null, 2), { mode: 0o666 });
+    } catch (writeError: any) {
+      console.error('Write error:', writeError);
+      if (writeError.code === 'EACCES') {
+        return NextResponse.json(
+          { error: 'Permission denied', details: 'No write permission for config file' },
+          { status: 403 }
+        );
+      }
+      throw writeError;
+    }
     
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to update config:', error);
     return NextResponse.json(
       { 
