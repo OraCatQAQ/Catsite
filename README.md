@@ -19,11 +19,18 @@
 
 1. 首次部署：
 ```bash
+# 创建项目目录
+mkdir ~/catsite
+cd ~/catsite
+
 # 创建数据目录
 mkdir data
 # 下载示例配置文件
 curl -o data/config.json https://raw.githubusercontent.com/OraCatQAQ/catsite/main/data/config.json
-# 启动容器
+```
+
+2. 启动容器：
+```bash
 docker run -d \
   --name catsite \
   -p 3000:3000 \
@@ -31,7 +38,7 @@ docker run -d \
   570768706/catsite:latest
 ```
 
-2. 更新应用：
+3. 更新应用：
 ```bash
 # 拉取最新镜像
 docker pull 570768706/catsite:latest
@@ -48,13 +55,19 @@ docker run -d \
 
 ### 方法二：使用 docker-compose
 
-1. 下载 docker-compose.yml：
+1. 创建专属目录并进入：
 ```bash
-curl -o docker-compose.yml https://raw.githubusercontent.com/OraCatQAQ/catsite/main/docker-compose.yml
+# 创建项目目录
+mkdir ~/catsite
+cd ~/catsite
 ```
 
-2. 创建数据目录并下载配置文件：
+2. 下载必要文件：
 ```bash
+# 下载 docker-compose.yml
+curl -o docker-compose.yml https://raw.githubusercontent.com/OraCatQAQ/catsite/main/docker-compose.yml
+
+# 创建数据目录并下载配置文件
 mkdir data
 curl -o data/config.json https://raw.githubusercontent.com/OraCatQAQ/catsite/main/data/config.json
 ```
@@ -70,6 +83,21 @@ docker-compose pull
 docker-compose down
 docker-compose up -d
 ```
+
+### 目录结构说明
+
+推荐的目录结构：
+```
+~/catsite/              # 项目专属目录
+  ├── data/            # 数据目录
+  │   └── config.json  # 配置文件
+  └── docker-compose.yml  # （如果使用方法二）
+```
+
+这样的目录结构有以下优点：
+- 所有相关文件都在一个专属目录中，方便管理
+- 避免与其他项目的数据目录混淆
+- 方便备份整个应用的数据
 
 ## 配置说明
 
