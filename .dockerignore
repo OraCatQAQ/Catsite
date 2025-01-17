@@ -6,4 +6,8 @@ node_modules
 README.md
 .vscode
 .idea
-*.log 
+*.log
+data
+Dockerfile
+.dockerignore
+docker-compose.yml 
